@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 //This is a bean - it is handled by the Spring framework
 @Controller
 public class MovieController {
-    MovieAnalysisService movieService = new MovieAnalysisService();
+    MovieAnalysisService movieService = new MovieAnalysisService("src/main/resources/static/film-new.csv");
 
     // Index
     @ResponseBody

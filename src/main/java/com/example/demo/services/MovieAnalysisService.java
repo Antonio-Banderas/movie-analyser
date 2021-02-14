@@ -13,10 +13,20 @@ public class MovieAnalysisService {
 
     ArrayList<Movie> movieList;
 
-    public MovieAnalysisService() {
+    public MovieAnalysisService(String path) {
 
-        File movieFile = new File("src/main/resources/static/film-new.csv");
+        movieList = createMovieList(path);
 
+    }
+
+    /* Sanitizes the list of movies from the file and scan
+     into an Arraylist<Movie> we can work with onwards */
+    private ArrayList<Movie> createMovieList(String path) {
+
+        // Create file from path
+        File movieFile = new File(path);
+
+        // Create a scan of the file
         Scanner scanOfMovieFile = null;
         try {
             scanOfMovieFile = new Scanner(movieFile);
@@ -24,24 +34,16 @@ public class MovieAnalysisService {
             e.printStackTrace();
         }
 
-        movieList = createMovieList(scanOfMovieFile);
+        // Skip the first 2 lines of metadata in the CSV file in the scan
+        scanOfMovieFile.nextLine();
+        scanOfMovieFile.nextLine();
 
-    }
-
-    /* Sanitizes the list of movies from the file and scan
-     into an Arraylist<Movie> we can work with onwards */
-    private ArrayList<Movie> createMovieList(Scanner scanOfCSV) {
-
+        // Dissect every line of the scan to a movie object, while adding it the final ArrayList <Movie>
         ArrayList<Movie> movieList = new ArrayList<>();
-
-        // Skip the first 2 lines of metadata in the CSV file
-        scanOfCSV.nextLine();
-        scanOfCSV.nextLine();
-
-        while (scanOfCSV.hasNextLine()) {
+        while (scanOfMovieFile.hasNextLine()) {
 
             // Split
-            String[] firstMovieAsArray = scanOfCSV.nextLine().split(";");
+            String[] firstMovieAsArray = scanOfMovieFile.nextLine().split(";");
 
             Movie temp = new Movie(
                     firstMovieAsArray[0],   // year
@@ -55,6 +57,8 @@ public class MovieAnalysisService {
             );
             movieList.add(temp);
         }
+
+        // Return your beautiful work
         return movieList;
     }
 
